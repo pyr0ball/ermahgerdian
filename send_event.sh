@@ -9,17 +9,21 @@
 #######################
 # Pest detection status
 PEST_INITIALIZED=1
-PEST_INITIALIZED_TEXT="Pest detector initialized"
+PEST_INITIALIZED_TXT="Pest detector initialized"
 
 PEST_IN_SIGHT=10
+PEST_OUT_SIGHT=15
 PEST_IN_RANGE=20
-PEST_OUT_SIGHT=30
-PEST_OUT_RANGE=40
+PEST_OUT_RANGE=25
+PEST_IDENTIFIED=30
+PEST_TARGETED=40
 
 PEST_IN_SIGHT_TXT="Pest in sight"
 PEST_IN_RANGE_TXT="Pest in range"
 PEST_OUT_SIGHT_TXT="Pest out of sight"
 PEST_OUT_RANGE_TXT="Pest out of range"
+PEST_IDENTIFIED_TXT="Pest identified"
+PEST_TARGETED_TXT="Pest targeted for removal"
 
 
 #########################
@@ -79,11 +83,10 @@ BOT_ERROR_VISION_TXT="Bot vision error"
 
 ##################################
 
-#curl -i -X PUT https://api-m2x.att.com/v2/devices/4526ba24fa3/streams/pest/value -H "X-M2X-KEY: 70e9368ff53c2493043b42b9d437173f" -H "Content-Type: application/json" -d "{ \"value\": \"1000\" }"
-
 DEVICE_ID='4526ba45bc85b8fafeba859d5fd24fa3'
 M2X_KEY='70e9368ff53c2493043b42b9d437173f'
 
+# Streams
 STREAM_PEST_DETECT='pest_detect'
 STREAM_BOT_ACTION='bot_action'
 STREAM_BOT_HEALTH='bot_health'
@@ -104,7 +107,7 @@ curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/${stream_n
 arg1=`echo $1 | sed 's|.|\U&|g'`
 arg2=`echo $2 | sed 's|.|\U&|g'`
 val_var="$arg2"
-valtxt_var="${val_var}_TEXT"
+valtxt_var="${val_var}_TXT"
 stream_var="STREAM_${arg1}"
 val="${!val_var}"
 stream="${!stream_var}"

@@ -1,5 +1,10 @@
 #!/bin/bash
-
+#
+# send_event.sh
+#
+# Usage:
+#   ./send_event.sh pest_detect pest_in_sight
+#
 
 #######################
 # Pest detection status
@@ -79,14 +84,14 @@ BOT_ERROR_VISION_TXT="Bot vision error"
 DEVICE_ID='4526ba45bc85b8fafeba859d5fd24fa3'
 M2X_KEY='70e9368ff53c2493043b42b9d437173f'
 
-STREAM_PEST_STATUS='pest_detect_status'
+STREAM_PEST_DETECT='pest_detect'
 STREAM_BOT_ACTION='bot_action'
 STREAM_BOT_HEALTH='bot_health'
 STREAM_BOT_ERROR='bot_error'
 
 # Create streams if they don't already exist
 function create_streams {
-  for stream_name in $STREAM_PEST_STATUS $STREAM_BOT_ACTION $STREAM_BOT_HEALTH $STREAM_BOT_ERROR; do
+  for stream_name in $STREAM_PEST_DETECT $STREAM_BOT_ACTION $STREAM_BOT_HEALTH $STREAM_BOT_ERROR; do
     display_name=`echo $stream_name | sed 's|_| |g' | sed 's|\b[a-z]|\U&|g' `
 echo "Creating stream $display_name ($stream_name), and also it's text version"
 curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/$stream_name" -H "X-M2X-KEY: $M2X_KEY" -H "Content-Type: application/json" -d "{ \"display_name\": \"$display_name\" }"
@@ -96,15 +101,21 @@ curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/${stream_n
 #create_streams
 
 # Send event
-val="$PEST_IN_SIGHT" #TODO: take from arg
-stream="$STREAM_PEST_STATUS" # TODO: take from arg
-valstr="Message from bot #1: ${PEST_IN_SIGHT_TXT}"
+arg1=`echo $1 | sed 's|.|\U&|g'`
+arg2=`echo $2 | sed 's|.|\U&|g'`
+val_var="$arg2"
+valtxt_var="${val_var}_TEXT"
+stream_var="STREAM_${arg1}"
+val="${!val_var}"
+stream="${!stream_var}"
+[ -z "$val" ] || [ -z "$stream" ] && echo "send_event.sh expects 2 valid arguments" && exit 1
+valstr="Bot #1: ${!valtxt_var}"
 echo "val=$val"
 echo "stream=$stream"
 echo "valstr=$valstr"
 
 curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/$stream/value" -H "X-M2X-KEY: $M2X_KEY" -H "Content-Type: application/json" -d "{ \"value\": \"$val\" }"
-curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/${stream}_text/value" -H "X-M2X-KEY: $M2X_KEY" -H "Content-Type: application/json" -d "{ \"value\": \"$val\" }"
+curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/${stream}_text/value" -H "X-M2X-KEY: $M2X_KEY" -H "Content-Type: application/json" -d "{ \"value\": \"$valstr\" }"
 
 echo "End send event"
 

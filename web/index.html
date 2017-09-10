@@ -1,0 +1,83 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Pest Paladin Manual Control</title>
+  <meta name="description" content="Pest Paladin Manual Control">
+
+  <!--<link rel="stylesheet" href="css/styles.css?v=1.0">-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!--<script src="https://raw.githubusercontent.com/video-dev/hls.js/master/dist/hls.min.js"></script>-->
+  <script type="text/javascript" src="https://run-west.att.io/cefc0030efc35/5d2c32c5d238/98c564119badae3/in/flow/hls.min.js"></script>
+  <!-- Need to set msg.resHeaders = {'content-type': 'application/javascript'}; on Flow for hls.min.js -->
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <div>Pest Paladin Device Control</div>
+  <div style="width:1280px; height:720px; background-color: gray;">
+    <video id="deviceFeed"></video>
+  </div>
+  <div>
+    <button class="pan-btn" type="button" style="">Up</button> 
+    <button class="pan-btn" type="button" style="">Left</button> 
+    <button class="pan-btn" type="button" style="">Right</button>
+    <button class="pan-btn" type="button" style="">Down</button> 
+  </div>
+  
+  <script type="text/javascript">
+    
+    console.info("Checking HLS support");
+    if(Hls.isSupported()) {
+      console.info("Starting HLS streamer");
+      var video = document.getElementById('deviceFeed');
+      var hls = new Hls();
+      hls.loadSource('http://localhost/test.m3u8');
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED,function() {
+        video.play();
+      });
+    }
+
+    //ptzMoveTopLeft, ptzMoveBottomRight
+    function sendCmd(cmd){
+      var user='pi'
+      var pwd='raspberry'
+      var timeout = 5000;
+      console.info('sendCmd' + cmd);
+      $.ajax({
+        type: 'GET',
+        url: '/cgi-bin/CGIProxy.fcgi?' + 'usr=' + user + '&pwd=' + pwd + '&cmd=' + cmd + "&" + (new Date()).getTime(),
+        async: true,
+        timeout: timeout,
+        datatype: "text",
+        success: function (data) {
+            console.log("Request SUCCESS");
+            console.log(data);
+        },
+        error: function (data, state) {
+            console.error("Request ERROR")
+            console.error(arguments);
+        }
+      });
+    }//function sendCmd
+    
+    //'Up', Down, Left, Right
+    function moveCam(dir){
+      sendCmd('ptzMove' + dir);
+    }
+    
+    // Add BTN listeners
+    $('.pan-btn').on('click', function(evt){
+      console.log('click');
+      var dir = $(evt.target).text();
+      moveCam(dir);
+    });
+    
+  </script>
+</body>
+</html>

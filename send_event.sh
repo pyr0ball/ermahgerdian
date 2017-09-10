@@ -1,8 +1,10 @@
 #!/bin/bash
 #
-# send_event.sh
+# send_event.sh - sends an HTTPS POST to AT&T M2X with events as stream data
 #
 # Usage:
+#   ./send_event.sh <stream_name> <event>
+# Ex:
 #   ./send_event.sh pest_detect pest_in_sight
 #
 
@@ -84,7 +86,7 @@ BOT_ERROR_VISION_TXT="Bot vision error"
 ##################################
 
 DEVICE_ID='4526ba45bc85b8fafeba859d5fd24fa3'
-M2X_KEY='70e9368ff53c2493043b42b9d437173f'
+M2X_KEY='70e9368ff53c2493043b42b9d437173f' # TODO: Replace before production
 
 # Streams
 STREAM_PEST_DETECT='pest_detect'

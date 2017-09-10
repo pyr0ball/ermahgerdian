@@ -1,3 +1,5 @@
+![alt text](pest_paladin_concept.jpg)
+
 Pest Paladin
 ===============
 

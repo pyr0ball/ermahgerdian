@@ -84,6 +84,18 @@ STREAM_BOT_ACTION='bot_action'
 STREAM_BOT_HEALTH='bot_health'
 STREAM_BOT_ERROR='bot_error'
 
+# Create streams if they don't already exist
+function create_streams {
+  for stream_name in $STREAM_PEST_STATUS $STREAM_BOT_ACTION $STREAM_BOT_HEALTH $STREAM_BOT_ERROR; do
+    display_name=`echo $stream_name | sed 's|_| |g' | sed 's|\b[a-z]|\U&|g' `
+echo "Creating stream $display_name ($stream_name), and also it's text version"
+curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/$stream_name" -H "X-M2X-KEY: $M2X_KEY" -H "Content-Type: application/json" -d "{ \"display_name\": \"$display_name\" }"
+curl -i -X PUT "https://api-m2x.att.com/v2/devices/$DEVICE_ID/streams/${stream_name}_text" -H "X-M2X-KEY: $M2X_KEY" -H "Content-Type: application/json" -d "{ \"display_name\": \"$display_name Text\", \"type\": \"alphanumeric\" }"
+  done 
+}
+#create_streams
+
+# Send event
 val="$PEST_IN_SIGHT" #TODO: take from arg
 stream="$STREAM_PEST_STATUS" # TODO: take from arg
 valstr="Message from bot #1: ${PEST_IN_SIGHT_TXT}"

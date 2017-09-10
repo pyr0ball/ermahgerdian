@@ -12,8 +12,8 @@
 4. find opencv/build/etc/ibpcascades/*.xml files (example worked with this xml)
 
 5. fix the classpath for opencv libraries.
-   5.1 opencv/java/x64/opencv_java330.dll
-   5.2 opencv/java/opencv-330.jar
+  5.1 opencv/java/x64/opencv_java330.dll
+  5.2 opencv/java/opencv-330.jar
 
  for intellij:=
  =============

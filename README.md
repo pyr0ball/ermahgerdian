@@ -1,36 +1,39 @@
-![alt text](pest_paladin_concept.jpg)
+# ermahgerdian
 
-Pest Paladin
-===============
+1. Clone this project from GIT.
 
-Software for Raspberry Pi "Pest Paladin" project using AT&T M2X and Flow.
+2. Download opencv from
+* Homepage: <http://opencv.org>
+* Docs: <http://docs.opencv.org/master/>
+* Q&A forum: <http://answers.opencv.org>
+* Issue tracking: <https://github.com/opencv/opencv/issues>
 
-### To run web server:
+3. find opencv/build/etc/haarcascades/*.xml files
+4. find opencv/build/etc/ibpcascades/*.xml files (example worked with this xml)
 
-```
-cd web
-../hls/start_server.sh
-```
+5. fix the classpath for opencv libraries.
+   5.1 opencv/java/x64/opencv_java330.dll
+   5.2 opencv/java/opencv-330.jar
+
+ for intellij:=
+ =============
+ https://medium.com/@aadimator/how-to-set-up-opencv-in-intellij-idea-6eb103c1d45c
+
+ Note: use this only for setting the classpath for the libraries
+ https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000143544-IntelliJ-IDEA-import-OpenCV-Library
 
 
-### To run RTSP to HLS converter:
+ for eclipse:=
+ ============
+ http://docs.opencv.org/2.4/doc/tutorials/introduction/java_eclipse/java_eclipse.html
 
-```
-cd hls
-./start_stream.sh
-```
 
-### To test video input:
+After the setup:
+ find the FaceDetectionImage.java, which uses lbpcascades/lbpcascade_frontalface.xml to recognize the face.
+ right now it can read a file(image) and create a new file(image) with a square around the face.
 
-```
-./take_frame.sh
-```
 
-### To run object recognition:
 
-```
-./OpenCV-ffmpg-example.py
-```
 
-### Notes
-* The web camera and AT&T services require unique credentials and configuration.
+
+
